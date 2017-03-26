@@ -32,8 +32,28 @@
             <mvc:mapping path="/check-user" />
             <bean class="ru.alexander.springmvc.interceptor.TimeInterceptor" />
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/*" />
+            <ref bean ="localeChangeInterceptor" />
+        </mvc:interceptor>
     </mvc:interceptors>
 	
     <context:component-scan base-package="ru.alexander.springmvc" />
+    
+    <!--Локализация ошибок-->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource" >
+        <property name="basename" value="/WEB-INF/locales/messages" />
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+    
+    <!--Переключение языков-->
+    <!--Перехват переключения локали-->
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang" />
+    </bean>
+    <!--Хранит локаль в определённой области на уровне сессии-->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="ru" />
+    </bean>
 
 </beans>

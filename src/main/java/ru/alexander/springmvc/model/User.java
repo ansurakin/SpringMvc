@@ -8,10 +8,12 @@ public class User {
 
     private int id;
 
-    @Size(min = 5, max = 10, message = "Имя должно быть от 5 до 10 символов")
+    //Имя должно быть от 5 до 10 символов
+    @Size(min = 5, max = 10, message = "{name.size.error}")
     private String name;
 
-    @Size(min = 5, max = 10, message = "Пароль должен быть от 5 до 10 символов")
+    //Пароль должен быть от 5 до 10 символов
+    @Size(min = 5, max = 10, message = "{password.size.error}")
     private String password;
 
     private boolean admin;

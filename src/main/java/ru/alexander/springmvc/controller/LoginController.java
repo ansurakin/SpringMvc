@@ -1,5 +1,6 @@
 package ru.alexander.springmvc.controller;
 
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import javax.validation.Valid;
 import org.slf4j.LoggerFactory;
@@ -15,17 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import ru.alexander.springmvc.model.User;
 
 @Controller
+//@SessionAttributes("user")
 public class LoginController {
     
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView main() {
-        return new ModelAndView("login", "user", new User());
+    public ModelAndView main(@ModelAttribute User user, HttpSession httpSession) {
+        user.setName("username");
+        user.setPassword("userpas");
+        return new ModelAndView("login", "user", user);
     }
 
     @RequestMapping(value = "/check-user", method = RequestMethod.POST)
@@ -33,7 +38,6 @@ public class LoginController {
         if (bindingResult.hasErrors()) {
             return "login";
         }
-        model.addAttribute("user", user);
         return "main";
     }
 
