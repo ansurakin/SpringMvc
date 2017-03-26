@@ -1,9 +1,12 @@
 package ru.alexander.springmvc.controller;
 
+import java.util.Locale;
 import javax.servlet.http.HttpSession;
-import org.slf4j.Logger;
 import javax.validation.Valid;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,22 +26,31 @@ import ru.alexander.springmvc.model.User;
 @Controller
 //@SessionAttributes("user")
 public class LoginController {
-    
+
+    @Autowired
+    private MessageSource messageSource;
+
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView main(@ModelAttribute User user, HttpSession httpSession) {
+    public ModelAndView main(@ModelAttribute User user, HttpSession httpSession, Locale locale) {
+        logger.info(locale.getDisplayLanguage());
+        logger.info(messageSource.getMessage("locale", new String[]{locale.getDisplayName(locale)}, locale));
         user.setName("username");
         user.setPassword("userpas");
         return new ModelAndView("login", "user", user);
     }
 
     @RequestMapping(value = "/check-user", method = RequestMethod.POST)
-    public String checkUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
+    public ModelAndView checkUser(Locale locale, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("locale",  messageSource.getMessage("locale", new String[]{locale.getDisplayName(locale)}, locale));
         if (bindingResult.hasErrors()) {
-            return "login";
+            modelAndView.setViewName("login");
+        }else{
+            modelAndView.setViewName("main");
         }
-        return "main";
+        return modelAndView;
     }
 
     @RequestMapping(value = "/failed", method = RequestMethod.GET)
@@ -54,12 +66,12 @@ public class LoginController {
         user.setName(name);
         return user;
     }
-    
+
     //Получение
     @RequestMapping(value = "/put-user-json", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String>  setJsonUser(@RequestBody User user){
+    public ResponseEntity<String> setJsonUser(@RequestBody User user) {
         logger.info("Получен пользователь с именем: " + user.getName());
-        return new ResponseEntity<>(HttpStatus.OK);                
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

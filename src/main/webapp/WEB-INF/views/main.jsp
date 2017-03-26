@@ -9,5 +9,6 @@
         <p>Ваше имя: ${user.name}</p>
         <p>Ваш пароль: ${user.password}</p>
         <p>Администратор: ${user.admin}</p>
+        <p>${locale}</p>
     </body>
 </html>
