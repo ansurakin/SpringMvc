@@ -13,6 +13,8 @@
 	
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven />
+    
+    <context:component-scan base-package="ru.alexander.springmvc" />
 
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
     <mvc:resources mapping="/resources/**" location="/resources/" />
@@ -54,6 +56,11 @@
     <!--Хранит локаль в определённой области на уровне сессии-->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="ru" />
+    </bean>
+    
+    <!--Загрузка файла-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10000000" />
     </bean>
 
 </beans>
