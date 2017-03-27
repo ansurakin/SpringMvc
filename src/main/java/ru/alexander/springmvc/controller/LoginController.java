@@ -9,12 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,14 +30,14 @@ import ru.alexander.springmvc.model.User;
 @Controller
 @SessionAttributes("user")
 public class LoginController {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
-    private MessageSource messageSource;    
-    
+    private MessageSource messageSource;
+
     @ModelAttribute
-    private User createUser(){
+    private User createUser() {
         User user = new User();
         user.setName("username");
         user.setPassword("userpas");
@@ -49,7 +47,7 @@ public class LoginController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView main(@ModelAttribute User user, HttpSession httpSession, Locale locale) {
         logger.info(locale.getDisplayLanguage());
-        logger.info(messageSource.getMessage("locale", new String[]{locale.getDisplayName(locale)}, locale));        
+        logger.info(messageSource.getMessage("locale", new String[]{locale.getDisplayName(locale)}, locale));
         return new ModelAndView("login");
     }
 
@@ -91,6 +89,21 @@ public class LoginController {
     public ResponseEntity<String> setJsonUser(@RequestBody User user) {
         logger.info("Получен пользователь с именем: " + user.getName());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //Проверка длины пароля
+    @RequestMapping(value = "/checkStrength", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
+    @ResponseBody
+    public String checkStrength(@RequestParam String password) {
+        String result = "<span style=\"color:%s; font-weight:bold;\">%s</span>";;
+        if (password.length() >= 1 && password.length() < 3) {
+            result = String.format(result, "red", "Слабый");
+        } else if (password.length() >= 3 && password.length() < 5) {
+            result = String.format(result, "blue", "Средний");
+        } else if (password.length() >= 5) {
+            result = String.format(result, "green", "Сильный");
+        }
+        return result;
     }
 
 }
