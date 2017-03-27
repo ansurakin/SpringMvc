@@ -106,4 +106,10 @@ public class LoginController {
         return result;
     }
 
+//    Просмотр pdf
+    @RequestMapping(value = "/downloadPDF", method = RequestMethod.GET)
+    public ModelAndView downloadPDF() {
+        return new ModelAndView("pdfView");
+    }
+
 }

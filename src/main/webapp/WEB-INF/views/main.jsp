@@ -11,6 +11,8 @@
         <p>Ваш пароль: ${user.password}</p>
         <p>Администратор: ${user.admin}</p>
         <p>${locale}</p>
+        
+        <p><a href="downloadPDF">Download PDF Document</a></p>
 
     <form:form method="POST" enctype="multipart/form-data" modelAttribute="uploadedFile" action="uploadFile">
         <table>
